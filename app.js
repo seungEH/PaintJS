@@ -1,5 +1,6 @@
 const canvas = document.getElementById("jsCanvas");
 const ctx = canvas.getContext("2d");
+const colors = document.getElementsByClassName("jsColor");
 
 canvas.width = 700;
 canvas.height = 700;
@@ -28,18 +29,26 @@ function onMouseMove(event){
     if(!painting){
         ctx.beginPath(); //path 그리기
         ctx.moveTo(x,y); //옮기기
+        console.log("!painting");
     } else{
          ctx.lineTo(x,y); //첫번째 두번째 잇기?
          ctx.stroke(); // 획으로 그리기
+         console.log("parinting");
     }
 }
 
-function onMouseDown(event){
-    painting = true;
-}
+// function onMouseDown(event){
+//     painting = true;
+// }
  
+function handleColorClick(event){
+    // console.log(event.target.style);
+    const color = event.target.style.backgroundColor;
+    ctx.strokeStyle = color;
+    console.log(color);
+}
 
-if(canvas){
+if(canvas){ 
     canvas.addEventListener("mousemove", onMouseMove);
     //캔버스를 클릭했을때 좌표
     canvas.addEventListener("mousedown", startPainting);
@@ -48,3 +57,5 @@ if(canvas){
     //페인팅하다가 캔버스를 벗어났을때
     canvas.addEventListener("mouseleave", stopPainting);
 }
+
+Array.from(colors).forEach(color => color.addEventListener("click", handleColorClick));
