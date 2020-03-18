@@ -3,12 +3,17 @@ const ctx = canvas.getContext("2d");
 const colors = document.getElementsByClassName("jsColor");
 const range = document.getElementById("jsRange");
 const mode = document.getElementById("jsMode");
+const saveBtn = document.getElementById("jsSave");
 
 const INITIAL_COLOR = "#2c2c2c";
 const CANVAS_SIZE = 700;
 
 canvas.width = CANVAS_SIZE;
 canvas.height = CANVAS_SIZE;
+
+//이미지 저장시 배경화면 투명 -> 디폴트 화이트로 변경
+ctx.fillStyle="white";
+ctx.fillRect(0, 0, CANVAS_SIZE, CANVAS_SIZE);  
 
 //디폴트 검정색 
 ctx.strokeStyle="#INITIAL_COLOR";
@@ -81,16 +86,36 @@ function handleCanvasClick(event){
     }
 }
 
+//context menu (오른쪽 클릭 안나오게하기)
+function handleCM(event){
+    event.preventDefault();
+}
+
+//savaBtn 제어
+function handleSaveClick(event){
+    // const image = canvas.toDataURL("image/jpeg");
+
+    //Default PNG 
+    const image = canvas.toDataURL();
+    const link = document.createElement("a");
+    link.href = image
+    link.download = "PaintJS ";
+    console.log(link);
+    link.click();
+}
+
 if(canvas){ 
     canvas.addEventListener("mousemove", onMouseMove);
     //캔버스를 클릭했을때 좌표
     canvas.addEventListener("mousedown", startPainting);
-    //페인팅이 끝나면 다시 false 값이 되어야함.
+    //페인팅이 끝나면 다시 false 값이 되어야함. 
     canvas.addEventListener("mouseup", stopPainting)
     //페인팅하다가 캔버스를 벗어났을때
     canvas.addEventListener("mouseleave", stopPainting);
     //색 채우기
     canvas.addEventListener("click", handleCanvasClick);
+    //오른쪽 클릭 메뉴 
+    canvas.addEventListener("contextmenu", handleCM);
 }
 
 Array.from(colors).forEach(color => color.addEventListener("click", handleColorClick));
@@ -101,4 +126,8 @@ if(range){
 
 if(mode){
     mode.addEventListener("click", handleModeClick);
+}
+
+if(saveBtn){
+    saveBtn.addEventListener("click", handleSaveClick);
 }
